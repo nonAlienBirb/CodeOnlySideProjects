@@ -45,35 +45,44 @@ int main() {
         BeginDrawing();
         ClearBackground(BLACK);
         
-        if(IsKeyDown(KEY_DOWN)){
+        //player movements
+        if(IsKeyDown(KEY_W)){
             rect1Y = rect1Y - 5;
-        }else if (IsKeyDown(KEY_UP))
+        }else if (IsKeyDown(KEY_S))
         {
             rect1Y = rect1Y + 5;
         }
-        if (IsKeyDown(KEY_W))
-        {
-            rect2Y = rect2Y + 5;
-        }else if (IsKeyDown(KEY_S))
+        if (IsKeyDown(KEY_UP))
         {
             rect2Y = rect2Y - 5;
+        }else if (IsKeyDown(KEY_DOWN))
+        {
+            rect2Y = rect2Y + 5;
         }
         
+        //game start and set ball speed
         if(IsKeyPressed(KEY_SPACE)& (!ballrun)){
             ballrun = true;
 
             int signX = rand(0,1)==1? 1:-1;
             int signY = rand(0,1)==1? 1:-1;
-
-            ballXspeed = signX * rand(1,4);
-            ballYspeed = signY * rand(1,4);
+            int x = 0 ;
+            int y = 0 ;
+            while (x!=5 || y!=5)
+            {
+                x = rand(1,5);
+                y = rand(1,5);
+            }
+        
+            ballXspeed = signX * x;
+            ballYspeed = signY * y;
         }
         if(ballrun){
             ballX = ballX+ballXspeed;
             ballY = ballY+ballYspeed;    
         }
         
-
+        //ball reflections
         if (ballY - ballRad < 0 || ballY + ballRad > screenHeight) {
             ballYspeed = -ballYspeed;
         }
@@ -82,6 +91,7 @@ int main() {
             ballXspeed = -ballXspeed;
         }
 
+        //reset game
         if (ballX <= 0 || ballX >= screenWidth){
             ballrun = false;
             ballX = (screenWidth - ballRad)/2;
@@ -90,6 +100,7 @@ int main() {
             rect1Y = (screenHeight - rect1Height)/2;
         }
 
+        //if player goes outside screen , bring it back from the opposite side
         if (!((-rect2Height+5<=rect2Y))){
             rect2Y = screenHeight;
         }else if(!(rect2Y<=screenHeight)){
@@ -101,6 +112,7 @@ int main() {
             rect1Y = 0;
         } 
         
+        //draiwngs
         DrawRectangle(rect1X,rect1Y,rect1Width,rect1Height, BLUE);
         DrawRectangle(rect2X,rect2Y,rect2Width,rect2Height, BLUE);
         DrawCircle(ballX,ballY,ballRad, GREEN);
